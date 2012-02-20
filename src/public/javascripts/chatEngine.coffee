@@ -1,3 +1,8 @@
+(($) ->
+  $.fn.chatWindow = (type) ->
+    
+) jQuery
+
 $ ->
   server = 'http://localhost:14124/'
   
@@ -15,7 +20,7 @@ $ ->
     
   #function that accepts returned messages from server
   messageReturned = (data) ->
-    $('#chatList').append("<li> #{data.message.user.username}: #{data.message.message} </li>")
+    $('#chatList').append("<li> #{data.message.user.friendlyName}: #{data.message.message} </li>")
     
   socket.emit "joinRoom",
     user:

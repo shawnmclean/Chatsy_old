@@ -1,5 +1,9 @@
 (function() {
 
+  (function($) {
+    return $.fn.chatWindow = function(type) {};
+  })(jQuery);
+
   $(function() {
     var messageReturned, sendMsg, server, socket, textBox;
     server = 'http://localhost:14124/';
@@ -13,7 +17,7 @@
       }
     });
     messageReturned = function(data) {
-      return $('#chatList').append("<li> " + data.message.user.username + ": " + data.message.message + " </li>");
+      return $('#chatList').append("<li> " + data.message.user.friendlyName + ": " + data.message.message + " </li>");
     };
     socket.emit("joinRoom", {
       user: {
