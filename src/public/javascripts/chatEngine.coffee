@@ -1,19 +1,42 @@
-server = 'http://localhost:14124/'
-
-socket = io.connect server
-
-socket.emit "joinRoom",
-  username: 'Shawn'
-  userId: 12
-  roomId: 1
+$ ->
+  server = 'http://localhost:14124/'
+  
+  socket = io.connect server
+  
+  #the input for sending messages
+  textBox = $('#msg')
+  
+  #sending the message to the server event on enter keypress
+  $('#msg').keypress (e) ->
+    if(e.keyCode==13)
+      sendMsg $(this).val()
+      e.preventDefault()
+      $(this).val('')
     
-
-socket.on "userJoined", (data) ->
-  console.log data
-  socket.emit "message",
-    lol: 'test'
-    msg: 'dgdgdfg'
+  #function that accepts returned messages from server
+  messageReturned = (data) ->
+    $('#chatList').append("<li> #{data.message.user.username}: #{data.message.message} </li>")
     
+  socket.emit "joinRoom",
+    user:
+      friendlyName: 'Shawn'
+      userId: 1
+    roomId: 1
+      
+  
+  socket.on "userJoined", (data) ->
+    console.log data
 
-socket.on "joinRoom", (data) ->
-  console.log "user joined room"
+  socket.on "message", (data) ->
+    messageReturned data
+  
+  #function for sending message to the server
+  sendMsg = (msg) ->
+    socket.emit "message",
+      user:
+        friendlyName: 'Shawn'
+        userId: 1
+      roomId: 1
+      message: msg
+      
+      

@@ -6,14 +6,20 @@
       this.io = io;
       this.io.sockets.on("connection", function(socket) {
         socket.on("joinRoom", function(data) {
-          socket.set('userId', data.userId, function() {});
-          console.log("user joined room");
-          return socket.emit("userJoined", {
-            message: data
+          return socket.set('user', data.user, function() {
+            socket.join(data.roomId);
+            return socket.broadcast.to(data.roomId).emit("userJoined", {
+              message: data
+            });
           });
         });
-        return socket.on("message", function(from, data) {
-          return console.log("user ", from, "is saying ", data);
+        return socket.on("message", function(data) {
+          return socket.get("user", function(err, user) {
+            console.log("Chat message by ", user);
+            return io.sockets["in"](data.roomId).emit("message", {
+              message: data
+            });
+          });
         });
       });
     }
