@@ -1,8 +1,11 @@
 (($) ->
-  $.fn.chatWindow = (type) ->
-    
+  $.fn.chatWindow = (options) ->
+    settings = $.extend(
+      location: "top"
+      "background-color": "blue"
+    , options)
+    @each ->
 ) jQuery
-
 $ ->
   server = 'http://localhost:14124/'
   
@@ -38,9 +41,6 @@ $ ->
   #function for sending message to the server
   sendMsg = (msg) ->
     socket.emit "message",
-      user:
-        friendlyName: 'Shawn'
-        userId: 1
       roomId: 1
       message: msg
       

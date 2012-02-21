@@ -1,7 +1,14 @@
 (function() {
 
   (function($) {
-    return $.fn.chatWindow = function(type) {};
+    return $.fn.chatWindow = function(options) {
+      var settings;
+      settings = $.extend({
+        location: "top",
+        "background-color": "blue"
+      }, options);
+      return this.each(function() {});
+    };
   })(jQuery);
 
   $(function() {
@@ -34,10 +41,6 @@
     });
     return sendMsg = function(msg) {
       return socket.emit("message", {
-        user: {
-          friendlyName: 'Shawn',
-          userId: 1
-        },
         roomId: 1,
         message: msg
       });
