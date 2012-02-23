@@ -3,7 +3,7 @@ class exports.ChatService
   @Chat
   constructor: (@io) ->
     mongoose = require('mongoose/')
-    @db = mongoose.connect("mongodb://localhost/chat")
+    @db = mongoose.connect("mongodb://shawnmclean:testuser@dbh76.mongolab.com:27767/nodejschat")
     @Chat = @db.model('Chat')
     
     chatInstance = @Chat

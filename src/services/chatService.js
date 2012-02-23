@@ -10,7 +10,7 @@
       var chatInstance, mongoose;
       this.io = io;
       mongoose = require('mongoose/');
-      this.db = mongoose.connect("mongodb://localhost/chat");
+      this.db = mongoose.connect("mongodb://shawnmclean:testuser@dbh76.mongolab.com:27767/nodejschat");
       this.Chat = this.db.model('Chat');
       chatInstance = this.Chat;
       this.io.sockets.on("connection", function(socket) {
