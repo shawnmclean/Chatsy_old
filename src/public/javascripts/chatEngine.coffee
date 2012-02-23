@@ -11,7 +11,7 @@ $ ->
   roomId = prompt "Enter Room", "Enter Room Here"
   name = prompt "Enter Your name", "Name here"
   
-  server = 'http://localhost:14124/'
+  server = 'http://chatroomsnodejs.nodester.com/'
   
   socket = io.connect server
   

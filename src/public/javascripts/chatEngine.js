@@ -15,7 +15,7 @@
     var messageReturned, name, roomId, sendMsg, server, socket, textBox, userJoined;
     roomId = prompt("Enter Room", "Enter Room Here");
     name = prompt("Enter Your name", "Name here");
-    server = 'http://localhost:14124/';
+    server = 'http://chatroomsnodejs.nodester.com/';
     socket = io.connect(server);
     textBox = $('#msg');
     $('#msg').keypress(function(e) {
