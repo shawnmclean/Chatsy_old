@@ -23,7 +23,7 @@ $ ->
     
   #function that accepts returned messages from server
   messageReturned = (data) ->
-    $('#chatList').append("<li> #{data.message.user.friendlyName}: #{data.message.message} </li>")
+    $('#chatList').append("<li> #{data.friendlyName}: #{data.message} </li>")
     
   socket.emit "joinRoom",
     user:
@@ -35,8 +35,12 @@ $ ->
   socket.on "userJoined", (data) ->
     console.log data
 
+  socket.on "prefill", (messages) ->
+    for msg in messages.message
+      messageReturned msg
+
   socket.on "message", (data) ->
-    messageReturned data
+    messageReturned data.message
   
   #function for sending message to the server
   sendMsg = (msg) ->

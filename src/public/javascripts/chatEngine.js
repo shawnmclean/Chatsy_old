@@ -24,7 +24,7 @@
       }
     });
     messageReturned = function(data) {
-      return $('#chatList').append("<li> " + data.message.user.friendlyName + ": " + data.message.message + " </li>");
+      return $('#chatList').append("<li> " + data.friendlyName + ": " + data.message + " </li>");
     };
     socket.emit("joinRoom", {
       user: {
@@ -36,8 +36,18 @@
     socket.on("userJoined", function(data) {
       return console.log(data);
     });
+    socket.on("prefill", function(messages) {
+      var msg, _i, _len, _ref, _results;
+      _ref = messages.message;
+      _results = [];
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        msg = _ref[_i];
+        _results.push(messageReturned(msg));
+      }
+      return _results;
+    });
     socket.on("message", function(data) {
-      return messageReturned(data);
+      return messageReturned(data.message);
     });
     return sendMsg = function(msg) {
       return socket.emit("message", {

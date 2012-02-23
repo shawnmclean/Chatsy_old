@@ -7,6 +7,8 @@
 
   io = require('socket.io');
 
+  require('./models');
+
   ChatService = require('./services/chatService').ChatService;
 
   app = module.exports = express.createServer();
