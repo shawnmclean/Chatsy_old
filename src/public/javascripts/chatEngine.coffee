@@ -7,6 +7,10 @@
     @each ->
 ) jQuery
 $ ->
+  #temporary stuff
+  roomId = prompt "Enter Room", "Enter Room Here"
+  name = prompt "Enter Your name", "Name here"
+  
   server = 'http://localhost:14124/'
   
   socket = io.connect server
@@ -30,9 +34,9 @@ $ ->
     
   socket.emit "joinRoom",
     user:
-      friendlyName: 'Shawn'
-      userId: 1
-    roomId: 1
+      friendlyName: name
+      userId: name
+    roomId: roomId
       
   
   socket.on "userJoined", (data) ->
@@ -48,7 +52,7 @@ $ ->
   #function for sending message to the server
   sendMsg = (msg) ->
     socket.emit "message",
-      roomId: 1
+      roomId: roomId
       message: msg
       
       

@@ -12,7 +12,9 @@
   })(jQuery);
 
   $(function() {
-    var messageReturned, sendMsg, server, socket, textBox, userJoined;
+    var messageReturned, name, roomId, sendMsg, server, socket, textBox, userJoined;
+    roomId = prompt("Enter Room", "Enter Room Here");
+    name = prompt("Enter Your name", "Name here");
     server = 'http://localhost:14124/';
     socket = io.connect(server);
     textBox = $('#msg');
@@ -31,10 +33,10 @@
     };
     socket.emit("joinRoom", {
       user: {
-        friendlyName: 'Shawn',
-        userId: 1
+        friendlyName: name,
+        userId: name
       },
-      roomId: 1
+      roomId: roomId
     });
     socket.on("userJoined", function(data) {
       return userJoined(data.message.user);
@@ -54,7 +56,7 @@
     });
     return sendMsg = function(msg) {
       return socket.emit("message", {
-        roomId: 1,
+        roomId: roomId,
         message: msg
       });
     };
