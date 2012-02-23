@@ -23,10 +23,10 @@ $ ->
     
   #function that accepts returned messages from server
   messageReturned = (data) ->
-    $('#chatList').append("<li> #{data.friendlyName}: #{data.message} </li>")
+    $('#chatList').append("<li>#{data.created}: #{data.friendlyName}: #{data.message} </li>")
     
   userJoined = (user) ->
-    $('#chatList').append("<li> #{user.friendlyName}: #{user.userId} </li>")
+    $('#chatList').append("<li> #{user.friendlyName} joined </li>")
     
   socket.emit "joinRoom",
     user:
@@ -36,11 +36,12 @@ $ ->
       
   
   socket.on "userJoined", (data) ->
-    console.log data.message.user
+    userJoined data.message.user
 
   socket.on "prefill", (messages) ->
     for msg in messages.message
       messageReturned msg
+      
   socket.on "message", (data) ->
     messageReturned data.message
   

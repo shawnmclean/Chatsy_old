@@ -24,10 +24,10 @@
       }
     });
     messageReturned = function(data) {
-      return $('#chatList').append("<li> " + data.friendlyName + ": " + data.message + " </li>");
+      return $('#chatList').append("<li>" + data.created + ": " + data.friendlyName + ": " + data.message + " </li>");
     };
     userJoined = function(user) {
-      return $('#chatList').append("<li> " + user.friendlyName + ": " + user.userId + " </li>");
+      return $('#chatList').append("<li> " + user.friendlyName + " joined </li>");
     };
     socket.emit("joinRoom", {
       user: {
@@ -37,7 +37,7 @@
       roomId: 1
     });
     socket.on("userJoined", function(data) {
-      return console.log(data.message.user);
+      return userJoined(data.message.user);
     });
     socket.on("prefill", function(messages) {
       var msg, _i, _len, _ref, _results;

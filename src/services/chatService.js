@@ -56,15 +56,15 @@
               friendlyName: user.friendlyName,
               roomId: data.roomId
             });
-            chat.save(function(err) {
+            return chat.save(function(err) {
               if (err) {
-                return console.log("Error: ", err);
+                console.log("Error: ", err);
               } else {
-                return console.log("Message Saved");
+                console.log("Message Saved");
               }
-            });
-            return io.sockets["in"](data.roomId).emit("message", {
-              message: chat
+              return io.sockets["in"](data.roomId).emit("message", {
+                message: chat
+              });
             });
           });
         });

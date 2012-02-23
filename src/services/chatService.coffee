@@ -37,8 +37,7 @@ class exports.ChatService
               else
                 #send these messages to the user
                 socket.emit "prefill",
-                  message: data        
-            
+                  message: data
             socket.broadcast.to(data.roomId).emit "userJoined",
               message: data
       
@@ -58,7 +57,6 @@ class exports.ChatService
             if(err)
               console.log "Error: ", err
             else
-              console.log "Message Saved"
-              
-          io.sockets.in(data.roomId).emit "message",
-            message: chat
+              console.log "Message Saved"         
+            io.sockets.in(data.roomId).emit "message",
+              message: chat
