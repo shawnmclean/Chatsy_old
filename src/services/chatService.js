@@ -35,7 +35,7 @@
                 if (err) {
                   return console.log("Error: ", err);
                 } else {
-                  return io.sockets["in"](data.roomId).emit("prefill", {
+                  return socket.emit("prefill", {
                     message: data
                   });
                 }

@@ -25,6 +25,9 @@ $ ->
   messageReturned = (data) ->
     $('#chatList').append("<li> #{data.friendlyName}: #{data.message} </li>")
     
+  userJoined = (user) ->
+    $('#chatList').append("<li> #{user.friendlyName}: #{user.userId} </li>")
+    
   socket.emit "joinRoom",
     user:
       friendlyName: 'Shawn'
@@ -33,12 +36,11 @@ $ ->
       
   
   socket.on "userJoined", (data) ->
-    console.log data
+    console.log data.message.user
 
   socket.on "prefill", (messages) ->
     for msg in messages.message
       messageReturned msg
-
   socket.on "message", (data) ->
     messageReturned data.message
   

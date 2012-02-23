@@ -12,7 +12,7 @@
   })(jQuery);
 
   $(function() {
-    var messageReturned, sendMsg, server, socket, textBox;
+    var messageReturned, sendMsg, server, socket, textBox, userJoined;
     server = 'http://localhost:14124/';
     socket = io.connect(server);
     textBox = $('#msg');
@@ -26,6 +26,9 @@
     messageReturned = function(data) {
       return $('#chatList').append("<li> " + data.friendlyName + ": " + data.message + " </li>");
     };
+    userJoined = function(user) {
+      return $('#chatList').append("<li> " + user.friendlyName + ": " + user.userId + " </li>");
+    };
     socket.emit("joinRoom", {
       user: {
         friendlyName: 'Shawn',
@@ -34,7 +37,7 @@
       roomId: 1
     });
     socket.on("userJoined", function(data) {
-      return console.log(data);
+      return console.log(data.message.user);
     });
     socket.on("prefill", function(messages) {
       var msg, _i, _len, _ref, _results;

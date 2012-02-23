@@ -36,7 +36,7 @@ class exports.ChatService
                 console.log "Error: ", err
               else
                 #send these messages to the user
-                io.sockets.in(data.roomId).emit "prefill",
+                socket.emit "prefill",
                   message: data        
             
             socket.broadcast.to(data.roomId).emit "userJoined",
@@ -53,7 +53,7 @@ class exports.ChatService
                   friendlyName: user.friendlyName
                   roomId: data.roomId
                 )
-          #log message to database asyncronously
+          #log message to database asynchronously
           chat.save (err) ->
             if(err)
               console.log "Error: ", err
