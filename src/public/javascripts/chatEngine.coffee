@@ -1,22 +1,23 @@
-(($) ->
-  $.fn.chatWindow = (options) ->
-    settings = $.extend(
-      location: "top"
-      "background-color": "blue"
-    , options)
-    @each ->
-) jQuery
 $ ->
   #temporary stuff
   roomId = prompt "Enter Room", "Enter Room Here"
   name = prompt "Enter Your name", "Name here"
-  
-  server = 'http://chatroomsnodejs.nodester.com/'
+  server = 'http://localhost:14781/'
+  #server = 'http://chatroomsnodejs.nodester.com/'
   
   socket = io.connect server
   
   #the input for sending messages
   textBox = $('#msg')
+  
+  $('#leave').click (e) ->
+    socket.emit "leaveRoom"
+      user:
+        friendlyName: name
+        userId: name
+      roomId: roomId
+    e.preventDefault()
+    
   
   #sending the message to the server event on enter keypress
   $('#msg').keypress (e) ->
@@ -31,7 +32,10 @@ $ ->
     
   userJoined = (user) ->
     $('#chatList').append("<li> #{user.friendlyName} joined </li>")
-    
+
+  userLeave = (user) ->
+    $('#chatList').append("<li> #{user.friendlyName} left </li>")
+
   socket.emit "joinRoom",
     user:
       friendlyName: name
@@ -40,7 +44,10 @@ $ ->
       
   
   socket.on "userJoined", (data) ->
-    userJoined data.message.user
+    userJoined data.message
+  
+  socket.on "userLeave", (data) ->
+    userLeave data.message
 
   socket.on "prefill", (messages) ->
     for msg in messages.message

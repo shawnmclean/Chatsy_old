@@ -1,23 +1,22 @@
 (function() {
 
-  (function($) {
-    return $.fn.chatWindow = function(options) {
-      var settings;
-      settings = $.extend({
-        location: "top",
-        "background-color": "blue"
-      }, options);
-      return this.each(function() {});
-    };
-  })(jQuery);
-
   $(function() {
-    var messageReturned, name, roomId, sendMsg, server, socket, textBox, userJoined;
+    var messageReturned, name, roomId, sendMsg, server, socket, textBox, userJoined, userLeave;
     roomId = prompt("Enter Room", "Enter Room Here");
     name = prompt("Enter Your name", "Name here");
-    server = 'http://chatroomsnodejs.nodester.com/';
+    server = 'http://localhost:14781/';
     socket = io.connect(server);
     textBox = $('#msg');
+    $('#leave').click(function(e) {
+      socket.emit("leaveRoom", {
+        user: {
+          friendlyName: name,
+          userId: name
+        },
+        roomId: roomId
+      });
+      return e.preventDefault();
+    });
     $('#msg').keypress(function(e) {
       if (e.keyCode === 13) {
         sendMsg($(this).val());
@@ -31,6 +30,9 @@
     userJoined = function(user) {
       return $('#chatList').append("<li> " + user.friendlyName + " joined </li>");
     };
+    userLeave = function(user) {
+      return $('#chatList').append("<li> " + user.friendlyName + " left </li>");
+    };
     socket.emit("joinRoom", {
       user: {
         friendlyName: name,
@@ -39,7 +41,10 @@
       roomId: roomId
     });
     socket.on("userJoined", function(data) {
-      return userJoined(data.message.user);
+      return userJoined(data.message);
+    });
+    socket.on("userLeave", function(data) {
+      return userLeave(data.message);
     });
     socket.on("prefill", function(messages) {
       var msg, _i, _len, _ref, _results;
