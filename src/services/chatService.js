@@ -59,7 +59,11 @@
             });
           });
         });
-        socket.on("disconnect", function() {});
+        socket.on("disconnect", function() {
+          return socket.get("user", function(err, user) {
+            return console.log("disconnected: ", user);
+          });
+        });
         return socket.on("message", function(data) {
           return socket.get("user", function(err, user) {
             var chat;

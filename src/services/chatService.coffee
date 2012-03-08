@@ -56,7 +56,8 @@ class exports.ChatService
                   message: user    
       
       socket.on "disconnect", () ->
-        
+        socket.get "user", (err,user) ->
+          console.log "disconnected: ", user
       
       socket.on "message", (data) ->
         socket.get "user", (err, user) ->
