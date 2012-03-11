@@ -1,4 +1,4 @@
-class exports.ChatService
+$ ->
   @db
   @Chat
   constructor: (@io) ->
@@ -78,3 +78,7 @@ class exports.ChatService
                   console.log "Message Saved"         
                 io.sockets.in(data.roomId).emit "message",
                   message: chat
+
+      socket.on "setUserStatus", (data) ->
+        #announce to all rooms the user is in of the status change
+        #if(user.rooms)
