@@ -14,4 +14,6 @@ class ChatsyEngine
   #accepts a ChatsyRoom object
   joinRoom: (room) ->
     socket.emit "joinRoom"
+      roomId: room.roomId
+      user: @user
       
