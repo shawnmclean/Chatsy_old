@@ -1,4 +1,4 @@
-$ ->
+class exports.ChatService
   @db
   @Chat
   constructor: (@io) ->
