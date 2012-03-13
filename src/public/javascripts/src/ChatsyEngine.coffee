@@ -1,6 +1,6 @@
 class ChatsyEngine
   #keep a list of ChatsyRoom objects the engine is managing
-  rooms: null
+  rooms: new Array()
   #the user client that is using the engine
   user: null
   
@@ -13,7 +13,8 @@ class ChatsyEngine
     
   #accepts a ChatsyRoom object
   joinRoom: (room) ->
-    socket.emit "joinRoom"
+    #check to see if the room is already added
+    @socket.emit "joinRoom"
       roomId: room.roomId
       user: @user
       

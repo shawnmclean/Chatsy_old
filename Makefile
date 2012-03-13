@@ -1,22 +1,28 @@
 all: server public
 
 #server
-server: shared
+server:
 	coffee -c ./src/models/
 	coffee -c ./src/services/
 	coffee -c ./src/routes/
 
 #public
-PUBLICDIR = ./src/public/javascripts
+pubDir = ./src/public/javascripts/
+pubSrcDir = ./src/public/javascripts/src/
+
+pubFiles = ${pubSrcDir}ChatsyEngine.coffee\
+		  ${pubSrcDir}ChatsyRoom.coffee
+
+sharedFiles = ./src/shared/shared.coffee
+
+allPubFiles = ${pubFiles} ${sharedFiles}
 
 public: Chatsy.min.js
 
 Chatsy.min.js: Chatsy.js
-	uglifyjs $(PUBLICDIR)/Chatsy.js > $(PUBLICDIR)/Chatsy.min.js
+	uglifyjs $(pubDir)/Chatsy.js > $(pubDir)/Chatsy.min.js
 	
-#combine the shared file and main files into Chatsy.js
-Chatsy.js: $(PUBLICDIR)/Chatsy.coffee shared
-	coffee -cj $(PUBLICDIR)/Chatsy.js ./src/shared/shared.coffee $(PUBLICDIR)/Chatsy.coffee 
+#combine the shared file and all other files into Chatsy.js
+Chatsy.js: 
+	coffee -cj $(pubDir)/Chatsy.js ${allPubFiles} 
 	
-shared: ./src/shared/shared.coffee
-	coffee -c ./src/shared/shared.coffee

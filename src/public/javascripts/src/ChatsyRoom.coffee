@@ -12,8 +12,8 @@ class ChatsyRoom
   userJoined: null
   userLeave: null
   
-  constructor: (@engine, @room, events) ->
-    if(!@engine || !@room)
+  constructor: (@engine, @roomId, events) ->
+    if(!@engine || !@roomId)
       throw new ReferenceError('All arguments should not be null.')
     
     if(events)
@@ -21,7 +21,7 @@ class ChatsyRoom
       @userJoined = events.userJoined
       @userLeave = events.userLeave
     
-    @engine.joinRoom(@room, @user)
+    @engine.joinRoom(this, @user)
     
   createMessage: (msg) ->
     
