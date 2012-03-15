@@ -1,4 +1,15 @@
-all: server public
+sharedFiles = ./src/shared/shared.coffee
+pubDir = ./src/public/javascripts/
+pubTestDir = ./test/client/
+pubSrcDir = ./src/public/javascripts/src/
+pubFiles = ${pubSrcDir}ChatsyEngine.coffee\
+		  ${pubSrcDir}ChatsyRoom.coffee
+allPubFiles = ${pubFiles} ${sharedFiles}
+
+all: server public tests
+
+tests: server public
+	coffee -c $(pubTestDir)
 
 #server
 server:
@@ -7,15 +18,7 @@ server:
 	coffee -c ./src/routes/
 
 #public
-pubDir = ./src/public/javascripts/
-pubSrcDir = ./src/public/javascripts/src/
 
-pubFiles = ${pubSrcDir}ChatsyEngine.coffee\
-		  ${pubSrcDir}ChatsyRoom.coffee
-
-sharedFiles = ./src/shared/shared.coffee
-
-allPubFiles = ${pubFiles} ${sharedFiles}
 
 public: Chatsy.min.js
 

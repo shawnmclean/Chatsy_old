@@ -1,7 +1,7 @@
 (function() {
-  var ChatsyEngine, ChatsyRoom;
+  var ChatsyRoom;
 
-  ChatsyEngine = (function() {
+  this.ChatsyEngine = (function() {
 
     ChatsyEngine.prototype.rooms = new Array();
 
@@ -16,6 +16,10 @@
     }
 
     ChatsyEngine.prototype.joinRoom = function(room) {
+      if (get_type(room !== "ChatsyRoom")) {
+        throw new Exception('parameter must be of type "ChatsyRoom"');
+      }
+      if (this.rooms.indexOf(room >= 0)) return;
       return this.socket.emit("joinRoom", {
         roomId: room.roomId,
         user: this.user
