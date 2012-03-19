@@ -18,17 +18,16 @@
           return socket.get("user", function(err, user) {
             if (!user) user = data.user;
             if (!user.rooms) {
-              user.rooms = new Array(data.roomId);
+              user.rooms = new Array(data.room.roomId);
             } else {
-              user.rooms.add(data.roomId);
+              user.rooms.add(data.room.roomId);
             }
-            console.log("User joined: ", user);
             return socket.set('user', user, function() {
               var query;
-              socket.join(data.roomId);
+              socket.join(data.room.roomId);
               query = chatInstance.find();
               query.limit(20);
-              query.where("roomId", data.roomId);
+              query.where("roomId", data.room.roomId);
               query.exec(function(err, data) {
                 if (err) {
                   return console.log("Error: ", err);
@@ -38,7 +37,10 @@
                   });
                 }
               });
-              return socket.broadcast.to(data.roomId).emit("userJoined", {
+              socket.emit("joinedConfirm", {
+                roomId: data.room.roomId
+              });
+              return socket.broadcast.to(data.room.roomId).emit("userJoined", {
                 message: user
               });
             });
@@ -89,7 +91,10 @@
             }
           });
         });
-        return socket.on("setUserStatus", function(data) {});
+        socket.on("setUserStatus", function(data) {});
+        return socket.on("test", function(data) {
+          return socket.emit("joinedConfirm", null);
+        });
       });
     }
 

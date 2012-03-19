@@ -1,7 +1,7 @@
 #ChatsyRoom class that will be required for all chat room instances
-class ChatsyRoom  
+class @ChatsyRoom  
   #every room has unique id
-  roomId: null
+  data: null
   #list of users in the room
   users: null
   #the chat engine to use (all events and streams are hooked into this for efficiency)
@@ -12,8 +12,8 @@ class ChatsyRoom
   userJoined: null
   userLeave: null
   
-  constructor: (@engine, @roomId, events) ->
-    if(!@engine || !@roomId)
+  constructor: (@engine, @data, events) ->
+    if(!@engine || !@data)
       throw new ReferenceError('All arguments should not be null.')
     
     if(events)
@@ -22,6 +22,9 @@ class ChatsyRoom
       @userLeave = events.userLeave
     
     @engine.joinRoom(this, @user)
+  
+  joinedConfirm: ()->
+    console.log "Joined room: ", @data
     
   createMessage: (msg) ->
     

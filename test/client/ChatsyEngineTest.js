@@ -14,4 +14,10 @@
     return c = new ChatsyEngine();
   });
 
+  test('joinRoom_throws_error_on_non_ChatsyRoom_parameter', function() {
+    var c;
+    c = new ChatsyEngine('', 'user');
+    return c.joinRoom('');
+  });
+
 }).call(this);

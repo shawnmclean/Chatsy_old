@@ -15,23 +15,20 @@ class exports.ChatService
           #check if user already in the system and add to room
           if(!user)
             user = data.user
-            
           #if user is in no room, create the array else just add the room
           if(!user.rooms)
-            user.rooms = new Array(data.roomId)
+            user.rooms = new Array(data.room.roomId)
           else
-            user.rooms.add(data.roomId)
+            user.rooms.add(data.room.roomId)
           
-          console.log "User joined: ", user
           #save the user to the system again    
           socket.set 'user', user, () ->
             #join the socket room         
-            socket.join data.roomId
-            
+            socket.join data.room.roomId
             #get the last 20 message in this room.
             query = chatInstance.find()
             query.limit(20)
-            query.where("roomId", data.roomId)
+            query.where("roomId", data.room.roomId)
 
             query.exec (err, data) ->
               if(err)
@@ -40,7 +37,12 @@ class exports.ChatService
                 #send these messages to the user
                 socket.emit "prefill",
                   message: data
-            socket.broadcast.to(data.roomId).emit "userJoined",
+            
+            #send confirmation that the user has joined!
+            socket.emit "joinedConfirm", 
+              roomId: data.room.roomId
+              
+            socket.broadcast.to(data.room.roomId).emit "userJoined",
               message: user
       
       socket.on "leaveRoom", (data) ->
@@ -82,3 +84,5 @@ class exports.ChatService
       socket.on "setUserStatus", (data) ->
         #announce to all rooms the user is in of the status change
         #if(user.rooms)
+      socket.on "test", (data) ->
+        socket.emit "joinedConfirm", null
