@@ -23,9 +23,9 @@ server:
 public: Chatsy.min.js
 
 Chatsy.min.js: Chatsy.js
-	uglifyjs $(pubDir)/Chatsy.js > $(pubDir)/Chatsy.min.js
+	uglifyjs $(pubDir)Chatsy.js > $(pubDir)Chatsy.min.js
 	
 #combine the shared file and all other files into Chatsy.js
 Chatsy.js: 
-	coffee -cj $(pubDir)/Chatsy.js ${allPubFiles} 
+	coffee -cj $(pubDir)Chatsy.js ${allPubFiles} 
 	
