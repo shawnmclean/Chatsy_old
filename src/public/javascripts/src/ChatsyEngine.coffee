@@ -18,6 +18,9 @@ class @ChatsyEngine
     @socket.on 'joinedConfirm', (message) ->
       engine.joinRoomConfirmed(message.roomId)
     
+    @socket.on 'message', (message) ->
+      console.log "test"
+    
   #accepts a ChatsyRoom object
   joinRoom: (room) ->
     #check to see if room is of type ChatsyRoom
@@ -35,14 +38,25 @@ class @ChatsyEngine
       @unConfirmedRooms.push room
             
   joinRoomConfirmed: (roomId)->
-    #check to see if the room is already added
+    engine = this
+    #get the room from unconfirmed list
     room = @unConfirmedRooms.filter((element, index, array) ->
       element.data.roomId == roomId
     )[0]
     #if it exist in unconfirmed room, then remove it and add it to active rooms
-    if(room)
+    if(room)      
       #remove from unconfirmed
       
       #add to active
       @rooms.push room
       room.joinedConfirm()
+      
+      #setup events
+      room.onSendMessage = (message, roomId) ->
+        engine.sendMessage(message, roomId)
+      
+  sendMessage: (message, roomId) ->
+    @socket.emit "message",
+      roomId: roomId
+      message: message
+      

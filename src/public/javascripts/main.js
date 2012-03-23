@@ -5,12 +5,19 @@ $(function(){
 	};
 	var engine = new ChatsyEngine('http://localhost:14781', user);
 	
-	var room = new ChatsyRoom(engine, {
+	var room = new ChatsyRoom({
 		roomId: 1,
 		name: "C# Chat room"
-	}, null);
+	}, 
+	{
+		roomJoined: function(){
+			console.log("room joined");
+			this.sendMessage("hello");
+		}
+	}	);
 	
+	engine.joinRoom(room);
 	$('body').click(function(){
-		engine.rand();
+		room.sendMessage("hello");
 	});
 });

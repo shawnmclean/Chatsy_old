@@ -17,26 +17,10 @@
         socket.on("joinRoom", function(data) {
           return socket.get("user", function(err, user) {
             if (!user) user = data.user;
-            if (!user.rooms) {
-              user.rooms = new Array(data.room.roomId);
-            } else {
-              user.rooms.add(data.room.roomId);
-            }
+            if (!user.rooms) user.rooms = new Array();
+            user.rooms.push(data.room.roomId);
             return socket.set('user', user, function() {
-              var query;
               socket.join(data.room.roomId);
-              query = chatInstance.find();
-              query.limit(20);
-              query.where("roomId", data.room.roomId);
-              query.exec(function(err, data) {
-                if (err) {
-                  return console.log("Error: ", err);
-                } else {
-                  return socket.emit("prefill", {
-                    message: data
-                  });
-                }
-              });
               socket.emit("joinedConfirm", {
                 roomId: data.room.roomId
               });
@@ -70,7 +54,11 @@
           return socket.get("user", function(err, user) {
             var chat;
             if (user.rooms) {
+              console.log(user);
               if (user.rooms.indexOf(data.roomId) > -1) {
+                io.sockets["in"](data.roomId).emit("message", {
+                  message: chat
+                });
                 chat = new chatInstance({
                   message: data.message,
                   userId: user.userId,
@@ -79,22 +67,16 @@
                 });
                 return chat.save(function(err) {
                   if (err) {
-                    console.log("Error: ", err);
+                    return console.log("Error: ", err);
                   } else {
-                    console.log("Message Saved");
+                    return console.log("Message Saved");
                   }
-                  return io.sockets["in"](data.roomId).emit("message", {
-                    message: chat
-                  });
                 });
               }
             }
           });
         });
-        socket.on("setUserStatus", function(data) {});
-        return socket.on("test", function(data) {
-          return socket.emit("joinedConfirm", null);
-        });
+        return socket.on("setUserStatus", function(data) {});
       });
     }
 

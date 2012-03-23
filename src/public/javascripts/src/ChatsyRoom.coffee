@@ -4,30 +4,33 @@ class @ChatsyRoom
   data: null
   #list of users in the room
   users: null
-  #the chat engine to use (all events and streams are hooked into this for efficiency)
-  engine: null
   
-  #events exposed
+  #public events exposed
   messageRecieved: null
   userJoined: null
   userLeave: null
+  roomJoined: null
   
-  constructor: (@engine, @data, events) ->
-    if(!@engine || !@data)
+  #events exposed to the engine
+  onSendMessage: null
+  
+  constructor: (@data, events) ->
+    if(!@data)
       throw new ReferenceError('All arguments should not be null.')
     
     if(events)
       @messageRecieved = events.messageRecieved
       @userJoined = events.userJoined
       @userLeave = events.userLeave
+      @roomJoined = events.roomJoined
     
-    @engine.joinRoom(this, @user)
-  
   joinedConfirm: ()->
-    console.log "Joined room: ", @data
+    if(@roomJoined)
+      @roomJoined()
     
-  createMessage: (msg) ->
-    
+  sendMessage: (msg) ->
+    if(@onSendMessage)
+      @onSendMessage(msg, @data.roomId)
     
       
   

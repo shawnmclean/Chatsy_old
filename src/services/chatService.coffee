@@ -11,33 +11,21 @@ class exports.ChatService
     
     @io.sockets.on "connection", (socket) ->
       socket.on "joinRoom", (data) ->        
+      
         socket.get "user", (err, user) ->
           #check if user already in the system and add to room
           if(!user)
             user = data.user
-          #if user is in no room, create the array else just add the room
+          #if user is in no room, create the array
           if(!user.rooms)
-            user.rooms = new Array(data.room.roomId)
-          else
-            user.rooms.add(data.room.roomId)
+            user.rooms = new Array()
           
+          user.rooms.push(data.room.roomId)
           #save the user to the system again    
           socket.set 'user', user, () ->
             #join the socket room         
             socket.join data.room.roomId
-            #get the last 20 message in this room.
-            query = chatInstance.find()
-            query.limit(20)
-            query.where("roomId", data.room.roomId)
-
-            query.exec (err, data) ->
-              if(err)
-                console.log "Error: ", err
-              else
-                #send these messages to the user
-                socket.emit "prefill",
-                  message: data
-            
+          
             #send confirmation that the user has joined!
             socket.emit "joinedConfirm", 
               roomId: data.room.roomId
@@ -65,7 +53,12 @@ class exports.ChatService
         socket.get "user", (err, user) ->
           #make sure the user is in the room before anything happens.
           if(user.rooms)
+            console.log user
             if(user.rooms.indexOf(data.roomId) > -1)
+              #send the message back to the room
+              io.sockets.in(data.roomId).emit "message",
+                message: chat
+              #create mongodb object to for logging to db
               chat = new chatInstance(
                       message: data.message
                       userId: user.userId
@@ -78,11 +71,8 @@ class exports.ChatService
                   console.log "Error: ", err
                 else
                   console.log "Message Saved"         
-                io.sockets.in(data.roomId).emit "message",
-                  message: chat
+            
 
       socket.on "setUserStatus", (data) ->
         #announce to all rooms the user is in of the status change
         #if(user.rooms)
-      socket.on "test", (data) ->
-        socket.emit "joinedConfirm", null

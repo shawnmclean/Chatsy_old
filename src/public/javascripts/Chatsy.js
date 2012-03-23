@@ -19,6 +19,9 @@
       this.socket.on('joinedConfirm', function(message) {
         return engine.joinRoomConfirmed(message.roomId);
       });
+      this.socket.on('message', function(message) {
+        return console.log("test");
+      });
     }
 
     ChatsyEngine.prototype.joinRoom = function(room) {
@@ -35,14 +38,25 @@
     };
 
     ChatsyEngine.prototype.joinRoomConfirmed = function(roomId) {
-      var room;
+      var engine, room;
+      engine = this;
       room = this.unConfirmedRooms.filter(function(element, index, array) {
         return element.data.roomId === roomId;
       })[0];
       if (room) {
         this.rooms.push(room);
-        return room.joinedConfirm();
+        room.joinedConfirm();
+        return room.onSendMessage = function(message, roomId) {
+          return engine.sendMessage(message, roomId);
+        };
       }
+    };
+
+    ChatsyEngine.prototype.sendMessage = function(message, roomId) {
+      return this.socket.emit("message", {
+        roomId: roomId,
+        message: message
+      });
     };
 
     return ChatsyEngine;
@@ -55,33 +69,36 @@
 
     ChatsyRoom.prototype.users = null;
 
-    ChatsyRoom.prototype.engine = null;
-
     ChatsyRoom.prototype.messageRecieved = null;
 
     ChatsyRoom.prototype.userJoined = null;
 
     ChatsyRoom.prototype.userLeave = null;
 
-    function ChatsyRoom(engine, data, events) {
-      this.engine = engine;
+    ChatsyRoom.prototype.roomJoined = null;
+
+    ChatsyRoom.prototype.onSendMessage = null;
+
+    function ChatsyRoom(data, events) {
       this.data = data;
-      if (!this.engine || !this.data) {
+      if (!this.data) {
         throw new ReferenceError('All arguments should not be null.');
       }
       if (events) {
         this.messageRecieved = events.messageRecieved;
         this.userJoined = events.userJoined;
         this.userLeave = events.userLeave;
+        this.roomJoined = events.roomJoined;
       }
-      this.engine.joinRoom(this, this.user);
     }
 
     ChatsyRoom.prototype.joinedConfirm = function() {
-      return console.log("Joined room: ", this.data);
+      if (this.roomJoined) return this.roomJoined();
     };
 
-    ChatsyRoom.prototype.createMessage = function(msg) {};
+    ChatsyRoom.prototype.sendMessage = function(msg) {
+      if (this.onSendMessage) return this.onSendMessage(msg, this.data.roomId);
+    };
 
     return ChatsyRoom;
 
